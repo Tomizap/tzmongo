@@ -1,10 +1,10 @@
-from tzmongo.main import mongo
+from tzmongo import mongo
 
 
 m = mongo({
-    "action": 'add',
-    "selector": {
-        "email": "test"
-    }
+    # "action": 'add',
+    # "selector": {
+    #     "email": "test"
+    # }
 })
 print(m)

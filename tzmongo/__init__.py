@@ -1,1 +1,1 @@
-from tzmongo import (mongo)
+from .main import *
