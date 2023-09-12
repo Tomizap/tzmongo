@@ -9,14 +9,14 @@ Simple Python Package
 """
 
 setup(
-    name="mongo",
+    name="tzmongo",
     version=VERSION,
     author="TZ",
     author_email="<zaptom.pro@gmail.com>",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     packages=find_packages(),
-    install_requires=[],
+    install_requires=["pymongo"],
     keywords=[],
     classifiers=[]
 )
