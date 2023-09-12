@@ -9,7 +9,7 @@ Simple Python Package
 """
 
 setup(
-    name="sample",
+    name="mongo",
     version=VERSION,
     author="TZ",
     author_email="<zaptom.pro@gmail.com>",

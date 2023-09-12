@@ -4,9 +4,9 @@ from pymongo import MongoClient
 uri = "mongodb+srv://tom:jHq13Y2ru1y5Dijb@cluster0.crkabz3.mongodb.net/?retryWrites=true&w=majority"
 
 # Créer un client MongoClient avec une configuration pour définir la version de l'API stable
-client = MongoClient(uri, serverApi=ServerApiVersion.v1, serverApiStrict=True, serverApiDeprecationErrors=True)
+client = MongoClient(uri)
 
-async def mongo(config):
+def mongo(config={}):
     print("mongo")
     response = None
     if not config:
@@ -20,18 +20,27 @@ async def mongo(config):
 
     try:
         print(f"Se connecter à MongoDB")
-        await client.start_session()
+        client.start_session()
         print(f"Connecté à MongoDB {db} {col}")
         collection = client[db][col]
         if action == "get":
-            response = await collection.find(selector).to_list(length=None)
+            response = list(collection.find(selector))
         elif action in ("add", "create"):
-            response = await collection.insert_one(selector)
+            response = collection.insert_one(selector).inserted_id
         elif action == "edit":
-            response = await collection.update_one(selector, updator)
+            response = collection.update_one(selector, updator).acknowledged
         elif action == "delete":
-            response = await collection.delete_one(selector)
+            response = collection.delete_one(selector).acknowledged
     finally:
-        await client.close()
+        client.close()
 
     return response
+
+
+# m = mongo({
+#     "action": 'add',
+#     "selector": {
+#         "email": "test"
+#     }
+# })
+# print(m)
