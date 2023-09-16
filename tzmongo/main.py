@@ -19,9 +19,12 @@ def mongo(config={}):
 
     action = config.get("action", "get")
 
+    # if _id is None:
+    #     _id = config.get("_id")
     selector = config.get("selector", {})
-    if selector.get('_id', config.get("_id")) is not None:
-        selector['_id'] = ObjectId(selector.get('_id', config.get("_id")))
+    _id = selector.get('_id') if selector.get('_id') is not None else config.get("_id")
+    if _id is not None:
+        selector['_id'] = ObjectId(_id)
     selector["userAccess"] = { "$in": ["zaptom.pro@gmail.com"] }
 
     updator = config.get("updator")

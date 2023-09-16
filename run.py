@@ -9,9 +9,17 @@ from tzmongo import mongo
 # })
 # print(m)
 
-# m = mongo({
-#     "db": 'storage',
-#     "collection": "tables",
-#     "selector": {"_id": "65058f69a2556d1dca881977"}
-# })
-# print(m)
+m = mongo({
+    "db": 'storage',
+    "collection": "tables",
+    "action": "edit",
+    "selector": {"_id": "65058f69a2556d1dca881977"},
+    "updator": {
+      "$push": {
+        'data': {
+          'salut': 'toi'
+        }
+      }
+    }
+})
+print(m)
