@@ -1,3 +1,4 @@
+from bson import ObjectId
 from pymongo import MongoClient
 
 # Définir l'URI de connexion
@@ -11,11 +12,18 @@ def mongo(config={}):
     response = None
     if not config:
         config = {}
+
     db = config.get("db", "tools")
+
     col = config.get("collection", "users")
+
     action = config.get("action", "get")
+
     selector = config.get("selector", {})
+    if selector.get('_id', config.get("_id")) is not None:
+        selector['_id'] = ObjectId(selector.get('_id', config.get("_id")))
     selector["userAccess"] = { "$in": ["zaptom.pro@gmail.com"] }
+
     updator = config.get("updator")
 
     try:
@@ -31,6 +39,10 @@ def mongo(config={}):
             response = collection.update_one(selector, updator).acknowledged
         elif action == "delete":
             response = collection.delete_one(selector).acknowledged
+
+    except Exception as e:
+        print("Error: " + str(e))
+
     finally:
         client.close()
 
