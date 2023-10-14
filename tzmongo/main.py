@@ -36,34 +36,22 @@ def mongo(config={}) -> dict:
         # print(f"Connecté à MongoDB {db} {col}")
         collection = client[db][col]
         if action == "get":
-            response = {
-                'data': list(collection.find(selector))
-            }
+            response['data'] = list(collection.find(selector))
         elif action in ("add", "create"):
-            response = {
-                'data': collection.insert_one(selector).inserted_id
-            }
+            response['data'] = collection.insert_one(selector).inserted_id
         elif action == "edit":
-            response = {
-                'data': collection.update_one(selector, updator).acknowledged
-            }
+            response['data'] = collection.update_one(selector, updator).acknowledged
         elif action == "delete":
-            response = {
-                'data': collection.delete_one(selector).acknowledged
-            }
+            response['data'] = collection.delete_one(selector).acknowledged
         else:
-            response = {
-                'ok': False,
-                "message": f'action "{action}" doesn\'t exist'
-            }
+            response['ok'] = False
+            response['message'] = f'action "{action}" doesn\'t exist'
             print(Fore.RED + response['message'])
             print(Style.RESET_ALL)
 
     except Exception as e:
-        response = {
-            'ok': False,
-            "message": "Error: " + str(e)
-        }
+        response['ok'] = False
+        response['message'] = "Error: " + str(e)
         print(Fore.RED + response['message'])
         print(Style.RESET_ALL)
 
