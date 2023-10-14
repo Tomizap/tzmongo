@@ -12,8 +12,8 @@ client = MongoClient(uri)
 def mongo(config={}) -> dict:
     # print("mongo")
     response = {
-        "ok": True,
-        "message": "",
+        "ok": False,
+        "message": "rien ne s'est produit",
         "data": []
     }
 
