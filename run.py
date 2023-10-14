@@ -23,3 +23,17 @@ m = mongo({
     }
 })
 print(m)
+
+# m = mongo({
+#     'collection': 'automnations',
+#     "action": 'edit',
+#     "selector": {
+#         "_id": "64f91b86bd602b8bd6d2ea76"
+#     },
+#     'updator': {
+#         "$set": {
+#             "message": 'test 2'
+#         }
+#     }
+# })
+# print(m)
