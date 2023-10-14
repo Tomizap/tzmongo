@@ -55,11 +55,11 @@ def mongo(config={}) -> dict:
                 response['message'] = 'Un probleme est survenu lors de la création du document'
                 response['ok'] = False
                 return response
-
-            elif updating.matched_count == 0:
+            
+            if updating.matched_count == 0:
                 response['ok'] = False
                 response['message'] = 'Aucun document trouvé'
-            if updating.matched_count == 1:
+            elif updating.matched_count == 1:
                 response['message'] = "Le document à bien été modifié"
                 response['data'] = list(collection.find({'_id': selector.get('_id')}))[0]
             else:
