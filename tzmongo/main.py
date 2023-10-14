@@ -34,10 +34,10 @@ def mongo(config={}) -> dict:
         # print(f"Connecté à MongoDB {db} {col}")
         collection = client[db][col]
 
-        if action == "get":
+        if action.lower() in ('get', 'read'):
             response['data'] = list(collection.find(selector))
 
-        elif action in ("add", "create"):
+        elif action.lower() in ("add", "create", 'post'):
             creating = collection.insert_one(selector)
             response['ok'] = creating.acknowledged
             if response['ok'] == True:
@@ -47,7 +47,7 @@ def mongo(config={}) -> dict:
                 response['message'] = 'Un probleme est survenu lors de la création du document'
                 response['ok'] = False
 
-        elif action == "edit":
+        elif action.lower() in ('put', 'edit'):
             updating = collection.update_one(selector, updator)
 
             response['ok'] = updating.acknowledged
@@ -66,7 +66,7 @@ def mongo(config={}) -> dict:
                 response['message'] = "Les documents ont bien été modifiés"
                 
 
-        elif action == "delete":
+        elif action.lower() in ("delete"):
             response['ok'] = collection.delete_one(selector).acknowledged
             if response['ok'] == True:
                 response['message'] = 'le document a bien été détruit'
