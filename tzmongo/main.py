@@ -1,4 +1,5 @@
 from bson import ObjectId
+from colorama import Fore, Style
 from pymongo import MongoClient
 
 # Définir l'URI de connexion
@@ -8,15 +9,11 @@ uri = "mongodb+srv://tom:jHq13Y2ru1y5Dijb@cluster0.crkabz3.mongodb.net/?retryWri
 client = MongoClient(uri)
 
 def mongo(config={}) -> dict:
-    print("mongo")
+    # print("mongo")
     response = {}
-    if not config:
-        config = {}
 
     db = config.get("db", "tools")
-
     col = config.get("collection", "users")
-
     action = config.get("action", "get")
 
     # if _id is None:
@@ -30,9 +27,9 @@ def mongo(config={}) -> dict:
     updator = config.get("updator")
 
     try:
-        print(f"Se connecter à MongoDB")
+        # print(f"Se connecter à MongoDB")
         client.start_session()
-        print(f"Connecté à MongoDB {db} {col}")
+        # print(f"Connecté à MongoDB {db} {col}")
         collection = client[db][col]
         if action == "get":
             response = list(collection.find(selector))
@@ -42,9 +39,15 @@ def mongo(config={}) -> dict:
             response = collection.update_one(selector, updator).acknowledged
         elif action == "delete":
             response = collection.delete_one(selector).acknowledged
+        else:
+            print(Fore.RED + f'action "{action}" doesn\'t exist')
 
     except Exception as e:
-        print("Error: " + str(e))
+        print(Fore.RED + "Error: " + str(e))
+        print(Style.RESET_ALL)
+        # response = {
+        #     'message': 
+        # }
 
     finally:
         client.close()
