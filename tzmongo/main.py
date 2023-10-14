@@ -86,7 +86,9 @@ def mongo(config={}) -> dict:
         print(Fore.RED + response['message'])
         print(Style.RESET_ALL)
 
-    finally:
-        client.close()
+    # finally:
+    #     client.close()
+
+    response['client'] = client
 
     return response
