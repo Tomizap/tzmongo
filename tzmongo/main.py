@@ -7,9 +7,9 @@ uri = "mongodb+srv://tom:jHq13Y2ru1y5Dijb@cluster0.crkabz3.mongodb.net/?retryWri
 # Créer un client MongoClient avec une configuration pour définir la version de l'API stable
 client = MongoClient(uri)
 
-def mongo(config={}):
+def mongo(config={}) -> dict:
     print("mongo")
-    response = None
+    response = {}
     if not config:
         config = {}
 
