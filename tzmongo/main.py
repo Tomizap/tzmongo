@@ -40,26 +40,45 @@ def mongo(config={}) -> dict:
         elif action in ("add", "create"):
             creating = collection.insert_one(selector)
             response['ok'] = creating.acknowledged
-            response['data'] = response['data'] = list(collection.find({'_id': creating.inserted_id}))[0]
+            if response['ok'] == True:
+                response['message'] = "Le document à bien été créé"
+                response['data'] = response['data'] = list(collection.find({'_id': creating.inserted_id}))[0]
+            else:
+                response['message'] = 'Un probleme est survenu lors de la création du document'
+                response['ok'] = False
 
         elif action == "edit":
-            # response['ok'] = collection.update_one(selector, updator).acknowledged
             updating = collection.update_one(selector, updator)
+
             response['ok'] = updating.acknowledged
-            if updating.matched_count == 1:
-                response['data'] = list(collection.find({'_id': selector.get('_id')}))[0]
+            if response['ok'] == False:
+                response['message'] = 'Un probleme est survenu lors de la création du document'
+                response['ok'] = False
+                return response
+
             elif updating.matched_count == 0:
                 response['ok'] = False
                 response['message'] = 'Aucun document trouvé'
+            if updating.matched_count == 1:
+                response['message'] = "Le document à bien été modifié"
+                response['data'] = list(collection.find({'_id': selector.get('_id')}))[0]
+            else:
+                response['message'] = "Les documents ont bien été modifiés"
+                
 
         elif action == "delete":
             response['ok'] = collection.delete_one(selector).acknowledged
-            
+            if response['ok'] == True:
+                response['message'] = 'le document a bien été détruit'
+            else:
+                response['message'] = 'le document n\'a pas été détruit'
+
         else:
             response['ok'] = False
-            response['message'] = f'action "{action}" doesn\'t exist'
+            response['message'] = f'action "{action}" n\'existe pas'
             print(Fore.RED + response['message'])
-            print(Style.RESET_ALL)
+        
+        print(Style.RESET_ALL)
 
     except Exception as e:
         response['ok'] = False
@@ -81,7 +100,7 @@ m = mongo({
     },
     'updator': {
         "$set": {
-            "message": 'test'
+            "message": 'test 2'
         }
     }
 })
