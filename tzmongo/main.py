@@ -10,7 +10,11 @@ client = MongoClient(uri)
 
 def mongo(config={}) -> dict:
     # print("mongo")
-    response = {}
+    response = {
+        "ok": True,
+        "message": "",
+        "data": []
+    }
 
     db = config.get("db", "tools")
     col = config.get("collection", "users")
@@ -32,22 +36,36 @@ def mongo(config={}) -> dict:
         # print(f"Connecté à MongoDB {db} {col}")
         collection = client[db][col]
         if action == "get":
-            response = list(collection.find(selector))
+            response = {
+                'data': list(collection.find(selector))
+            }
         elif action in ("add", "create"):
-            response = collection.insert_one(selector).inserted_id
+            response = {
+                'data': collection.insert_one(selector).inserted_id
+            }
         elif action == "edit":
-            response = collection.update_one(selector, updator).acknowledged
+            response = {
+                'data': collection.update_one(selector, updator).acknowledged
+            }
         elif action == "delete":
-            response = collection.delete_one(selector).acknowledged
+            response = {
+                'data': collection.delete_one(selector).acknowledged
+            }
         else:
-            print(Fore.RED + f'action "{action}" doesn\'t exist')
+            response = {
+                'ok': False,
+                "message": f'action "{action}" doesn\'t exist'
+            }
+            print(Fore.RED + response['message'])
+            print(Style.RESET_ALL)
 
     except Exception as e:
-        print(Fore.RED + "Error: " + str(e))
+        response = {
+            'ok': False,
+            "message": "Error: " + str(e)
+        }
+        print(Fore.RED + response['message'])
         print(Style.RESET_ALL)
-        # response = {
-        #     'message': 
-        # }
 
     finally:
         client.close()
