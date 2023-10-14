@@ -1,3 +1,4 @@
+import pprint
 from bson import ObjectId
 from colorama import Fore, Style
 from pymongo import MongoClient
@@ -19,30 +20,41 @@ def mongo(config={}) -> dict:
     db = config.get("db", "tools")
     col = config.get("collection", "users")
     action = config.get("action", "get")
-
-    # if _id is None:
-    #     _id = config.get("_id")
     selector = config.get("selector", {})
+    selector["userAccess"] = { "$in": ["zaptom.pro@gmail.com"] }
+    updator = config.get("updator")
+
     _id = selector.get('_id') if selector.get('_id') is not None else config.get("_id")
     if _id is not None:
         selector['_id'] = ObjectId(_id)
-    selector["userAccess"] = { "$in": ["zaptom.pro@gmail.com"] }
-
-    updator = config.get("updator")
 
     try:
         # print(f"Se connecter à MongoDB")
         client.start_session()
         # print(f"Connecté à MongoDB {db} {col}")
         collection = client[db][col]
+
         if action == "get":
             response['data'] = list(collection.find(selector))
+
         elif action in ("add", "create"):
-            response['data'] = collection.insert_one(selector).inserted_id
+            creating = collection.insert_one(selector)
+            response['ok'] = creating.acknowledged
+            response['data'] = response['data'] = list(collection.find({'_id': creating.inserted_id}))[0]
+
         elif action == "edit":
-            response['data'] = collection.update_one(selector, updator).acknowledged
+            # response['ok'] = collection.update_one(selector, updator).acknowledged
+            updating = collection.update_one(selector, updator)
+            response['ok'] = updating.acknowledged
+            if updating.matched_count == 1:
+                response['data'] = list(collection.find({'_id': selector.get('_id')}))[0]
+            elif updating.matched_count == 0:
+                response['ok'] = False
+                response['message'] = 'Aucun document trouvé'
+
         elif action == "delete":
-            response['data'] = collection.delete_one(selector).acknowledged
+            response['ok'] = collection.delete_one(selector).acknowledged
+            
         else:
             response['ok'] = False
             response['message'] = f'action "{action}" doesn\'t exist'
@@ -61,10 +73,16 @@ def mongo(config={}) -> dict:
     return response
 
 
-# m = mongo({
-#     "action": 'add',
-#     "selector": {
-#         "email": "test"
-#     }
-# })
-# print(m)
+m = mongo({
+    'collection': 'automnations',
+    "action": 'edit',
+    "selector": {
+        "_id": "64f91b86bd602b8bd6d2ea76"
+    },
+    'updator': {
+        "$set": {
+            "message": 'test'
+        }
+    }
+})
+print(m)
