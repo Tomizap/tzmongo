@@ -21,7 +21,7 @@ def mongo(config={}) -> dict:
     col = config.get("collection", "users")
     action = config.get("action", "get")
     selector = config.get("selector", {})
-    selector["userAccess"] = { "$in": ["zaptom.pro@gmail.com"] }
+    # selector["userAccess"] = { "$in": ["zaptom.pro@gmail.com"] }
     updator = config.get("updator")
 
     _id = selector.get('_id') if selector.get('_id') is not None else config.get("_id")
