@@ -16,7 +16,7 @@ setup(
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     packages=find_packages(),
-    install_requires=["pymongo"],
+    install_requires=["pymongo", "colorama"],
     keywords=[],
     classifiers=[]
 )
