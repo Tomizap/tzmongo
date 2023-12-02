@@ -25,14 +25,14 @@ def mongo(config={}):
     _id = selector.get('_id') if selector.get('_id') is not None else config.get("_id")
     if _id is not None:
         selector['_id'] = ObjectId(_id)
-    selector["userAccess"] = { "$in": ["zaptom.pro@gmail.com"] }
+    # selector["userAccess"] = { "$in": ["zaptom.pro@gmail.com"] }
 
     updator = config.get("updator")
 
     try:
-        print(f"Se connecter à MongoDB")
+        # print(f"Se connecter à MongoDB")
         client.start_session()
-        print(f"Connecté à MongoDB {db} {col}")
+        # print(f"Connecté à MongoDB {db} {col}")
         collection = client[db][col]
         if action == "get":
             response = list(collection.find(selector))
