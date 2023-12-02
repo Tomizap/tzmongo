@@ -30,9 +30,9 @@ def mongo(config={}) -> dict:
     updator = config.get("updator")
 
     try:
-        print(f"Se connecter à MongoDB")
+        # print(f"Se connecter à MongoDB")
         client.start_session()
-        print(f"Connecté à MongoDB {db} {col}")
+        # print(f"Connecté à MongoDB {db} {col}")
         collection = client[db][col]
 
         if action.lower() in ('get', 'read'):
