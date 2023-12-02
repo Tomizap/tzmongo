@@ -13,7 +13,7 @@ def mongo(config={}) -> dict:
     # print("mongo")
     response = {
         "ok": False,
-        "message": "rien ne s'est produit",
+        "message": "",
         "data": []
     }
 
@@ -21,13 +21,11 @@ def mongo(config={}) -> dict:
     col = config.get("collection", "users")
     action = config.get("action", "get")
     selector = config.get("selector", {})
-    # selector["userAccess"] = { "$in": ["zaptom.pro@gmail.com"] }
     updator = config.get("updator")
 
     _id = selector.get('_id') if selector.get('_id') is not None else config.get("_id")
     if _id is not None:
         selector['_id'] = ObjectId(_id)
-    # selector["userAccess"] = { "$in": ["zaptom.pro@gmail.com"] }
 
     updator = config.get("updator")
 
@@ -92,6 +90,6 @@ def mongo(config={}) -> dict:
     # finally:
     #     client.close()
 
-    response['client'] = client
+    # response['client'] = client
 
     return response
